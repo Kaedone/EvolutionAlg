@@ -5,29 +5,31 @@ from random import gauss, randrange
 import pop as pop
 
 
-# Создание первоначальной популяции потенциальных решений, гены которых генерируются случайным образом.
+# Создание первоначальной популяции потенциальных ((много)вероятных) решений, гены которых генерируются случайным
+# образом.
 def individual(number_of_genes, upper_limit, lower_limit):
     individuals = [round(rnd() * (upper_limit - lower_limit)
                          + lower_limit, 1) for x in range(number_of_genes)]
     return individuals
 
 
-# Функция принимает количество генов, верхний и нижний пределы для генов в качестве входных данных и создает
-# индивидуума.
+# Функция принимает количество генов, верхний и нижний пределы для генов(максимум и минимум), в качестве входных
+# данных и создает индивидуума(шаблон человека).
 def population(number_of_individuals,
                number_of_genes, upper_limit, lower_limit):
     return [individual(number_of_genes, upper_limit, lower_limit)
             for x in range(number_of_individuals)]
 
 
-# Функция расчета пригодности определяет значение пригодности индивидуума.
+# Функция расчета пригодности определяет значение пригодности индивидуума(реальность(не слишком ли хорош) и качество
+# (не слишком ли плох)).
 def fitness_calculation(individuals):
     fitness_value = sum(individuals)
     return fitness_value
 
 
-# Функция выбора колеса рулетки принимает кумулятивные суммы и случайно сгенерированное значение для процесса выбора
-# и возвращает номер выбранного человека
+# Функция выбора колеса рулетки принимает кумулятивные (промежуточные) суммы и случайно сгенерированное значение
+# (генерируется ПСЕВДОранломно с опредеоённым шансом) для процесса выбора и возвращает номер (id) выбранного человека.
 def roulette(cum_sum, chance):
     variable = list(cum_sum.copy())
     variable.append(chance)
@@ -35,7 +37,7 @@ def roulette(cum_sum, chance):
     return variable.index(chance)
 
 
-# Функция выбора (случайная фигура)
+# Функция выбора (случайная фигура).
 def selection(generation, method='Fittest Half'):
     generation['Normalized Fitness'] = \
         sorted([generation['Fitness'][x] / sum(generation['Fitness'])
@@ -75,7 +77,7 @@ def selection(generation, method='Fittest Half'):
     return selected
 
 
-# Функция сопряжения (взвешенное случайное спаривание)
+# Функция сопряжения (взвешенное случайное спаривание (соединение без выяснения "кто с кем"))
 def pairing(elite, selected, method='Fittest'):
     individuals = [elite['Individuals']] + selected['Individuals']
     fitness = [elite['Fitness']] + selected['Fitness']
@@ -107,7 +109,7 @@ def pairing(elite, selected, method='Fittest'):
     return parents
 
 
-# Функция спаривания (выбор 2-ух точек)
+# Функция спаривания (выбор 2-ух точек и постоение отрезка)
 def mating(parents, method='Single Point'):
     if method == 'Single Point':
         pivot_point = randint(1, len(parents[0]))
@@ -127,7 +129,8 @@ def mating(parents, method='Single Point'):
     return offsprings
 
 
-# Функция мутации (сброс мутационной фигуры)
+# Функция мутации (сброс мутационной фигуры) (происходят у выбранных особей, для улучшения разнообразия
+# (только в следующих поколениях))
 def mutation(individuals, upper_limit, lower_limit, mutation_rate=2,
              method='Reset', standard_deviation=0.001):
     gene = [randint(0, 7)]
@@ -147,8 +150,7 @@ def mutation(individuals, upper_limit, lower_limit, mutation_rate=2,
     return mutated_individual
 
 
-# Следующее поколение создано с использованием генетических операций. Элитарность может быть введена в генетический
-# алгоритм при создании следующего поколения
+# Следующее поколение созданое с использованием генетических операций.
 def next_generation(gene, upper_limit, lower_limit):
     elite = {}
     next_gen = {}
@@ -186,7 +188,7 @@ def next_generation(gene, upper_limit, lower_limit):
     return next_gen
 
 
-# Проверяем изменились ли максимальные значения пригодности
+# Проверяем изменились ли максимальные значения пригодности, для критериев прекращения (завершения).
 def fitness_similarity_check(max_fitness, number_of_similarity):
     result = False
     similarity = 0
@@ -203,7 +205,7 @@ def fitness_similarity_check(max_fitness, number_of_similarity):
 Result_file = 'GA_Results.txt'
 
 
-# Запуск генетического алгоритма для 20 человек в каждом поколении
+# Запуск генетического алгоритма для 20 (случайных) человек в каждом поколении
 def first_generation(pop):
     fitness = [fitness_calculation(pop[x])
                for x in range(list(pop))]

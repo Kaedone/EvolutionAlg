@@ -206,11 +206,11 @@ Result_file = 'GA_Results.txt'
 
 
 # Запуск генетического алгоритма для 20 (случайных) человек в каждом поколении
-def first_generation(pop):
-    fitness = [fitness_calculation(pop[x])
-               for x in range(list(pop))]
-    sorted_fitness = sorted([[pop[x], fitness[x]]
-                             for x in range(len(pop))], key=lambda x: x[1])
+def first_generation(pop_method):
+    fitness = [fitness_calculation(pop_method[x])
+               for x in range(list.pop())]
+    sorted_fitness = sorted([[pop_method[x], fitness[x]]
+                             for x in range(len(pop_method))], key=lambda x: x[1])
     populations = [sorted_fitness[x][0]
                    for x in range(len(sorted_fitness))]
     fitness = [sorted_fitness[x][1]
@@ -218,7 +218,7 @@ def first_generation(pop):
     return {'Individuals': populations, 'Fitness': sorted(fitness)}
 
 
-gen = [first_generation(pop)]
+gen = [first_generation.pop()]
 fitness_avg = np.array([sum(gen[0]['Fitness']) /
                         len(gen[0]['Fitness'])])
 fitness_max = np.array([max(gen[0]['Fitness'])])
